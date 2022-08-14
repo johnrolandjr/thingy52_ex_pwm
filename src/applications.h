@@ -10,8 +10,9 @@
 
 // Select which application by uncommenting a line
 //#define BASIC_BLINKY_APP
-#define BASIC_DIRECT_BLINKY_APP
-//#define PWM_BLINKY_APP
+//#define BASIC_DIRECT_BLINKY_APP
+//#define SINGLE_SHOT_BLINKY_APP
+#define BREATHING_BLINKY_APP
 
 #if defined(BASIC_BLINKY_APP)
     #include "basic_blinky.h"
@@ -21,8 +22,8 @@
     #include "basic_direct_blinky.h"
 #endif // BASIC_DIRECT_BLINKY_APP
 
-#if defined(PWM_BLINKY_APP)
-    //#include "pwm_blinky.h"
-#endif // PWM_BLINKY_APP
+#if defined(SINGLE_SHOT_BLINKY_APP) || defined(BREATHING_BLINKY_APP)
+    #include "breathing_blinky.h"
+#endif // SINGLE_SHOT_BLINKY_APP
 
 #endif // APPLICATIONS_H

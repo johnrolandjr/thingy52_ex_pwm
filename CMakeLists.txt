@@ -10,3 +10,4 @@ target_sources(app PRIVATE src/sx1509b.c)
 
 target_sources(app PRIVATE src/basic_blinky.c)
 target_sources(app PRIVATE src/basic_direct_blinky.c)
+target_sources(app PRIVATE src/breathing_blinky.c)

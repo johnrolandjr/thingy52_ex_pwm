@@ -26,6 +26,42 @@ void io_ex_write(uint8_t regAddr, uint8_t regValue)
     i2c_write_dt(&io_ex, buffer, 2);
 }
 
+int set_led_params(uint8_t pin, led_mode_param_t * params)
+{
+    int ret = DRV_SUCCESS;
+
+    switch(pin)
+    {
+        case 5:
+            io_ex_write(SX1509_REG_T_RISE_5, params->t_rise);
+            io_ex_write(SX1509_REG_T_ON_5, params->t_on);
+            io_ex_write(SX1509_REG_T_FALL_5, params->t_fall);
+            io_ex_write(SX1509_REG_OFF_5, params->off);
+            io_ex_write(SX1509_REG_I_ON_5, params->i_on);
+            break;
+        case 6:
+            io_ex_write(SX1509_REG_T_RISE_6, params->t_rise);
+            io_ex_write(SX1509_REG_T_ON_6, params->t_on);
+            io_ex_write(SX1509_REG_T_FALL_6, params->t_fall);
+            io_ex_write(SX1509_REG_OFF_6, params->off);
+            io_ex_write(SX1509_REG_I_ON_6, params->i_on);
+            break;
+        case 7:
+            io_ex_write(SX1509_REG_T_RISE_7, params->t_rise);
+            io_ex_write(SX1509_REG_T_ON_7, params->t_on);
+            io_ex_write(SX1509_REG_T_FALL_7, params->t_fall);
+            io_ex_write(SX1509_REG_OFF_7, params->off);
+            io_ex_write(SX1509_REG_I_ON_7, params->i_on);
+            break;
+        default:
+            // Unexpected pin provided
+            ret = DRV_ERROR;
+            break;
+    }
+
+    return ret;
+}
+
 int init_io(io_cfg_t * cfg)
 {
     uint8_t value;
@@ -89,13 +125,9 @@ int init_io(io_cfg_t * cfg)
     value = ((1 << r_pin) | (1 << g_pin) | (1 << b_pin)); // enable LED driver output on pins 5,6,7
     io_ex_write(SX1509_REG_A_LED_DRV_EN, value);
 
-    // Configure LED Driver parameters
-    // Leaving defaults for PIN 5,6,7
-    // Leaving default for RegTOnX
-    // Leaving default for RegIOnX
-    // Leaving default for RegOffX
-    // Leaving default for RegTRiseX
-    // Leaving default for RegTFallX
+    set_led_params(r_pin, cfg->r_params);
+    set_led_params(g_pin, cfg->g_params);
+    set_led_params(b_pin, cfg->b_params);
 
     current_output_A = 0xFF;
 
@@ -105,7 +137,6 @@ int init_io(io_cfg_t * cfg)
 int set_pwm(uint8_t r, uint8_t g, uint8_t b)
 {
     int ret = DRV_SUCCESS;
-    uint8_t value;
 
     // Set PWM intensity
     io_ex_write(SX1509_REG_I_ON_5, g);
@@ -118,4 +149,53 @@ int set_pwm(uint8_t r, uint8_t g, uint8_t b)
     io_ex_write(0x11, current_output_A);
 
     return ret;
+}
+
+void io_set_intensity(uint8_t pin, uint8_t intensity)
+{
+    switch(pin)
+    {
+        case 5:
+            io_ex_write(SX1509_REG_I_ON_5, intensity);
+            break;
+        case 6:
+            io_ex_write(SX1509_REG_I_ON_6, intensity);
+            break;
+        case 7:
+            io_ex_write(SX1509_REG_I_ON_7, intensity);
+            break;
+        default:
+            // don't update anything
+            break;
+    }
+}
+
+void io_start_single_shot(void)
+{
+    // Start pulse by lowering the pin values to 0
+    current_output_A &= ~((1 << r_pin) | (1 << g_pin) | (1 << b_pin));
+    io_ex_write(0x11, current_output_A);
+
+    // To ensure that the lowering is noticed, wait a bit of time
+    k_msleep(1);
+
+    // Prepare for next pulse by raising these pins back to 1
+    current_output_A |= ((1 << r_pin) | (1 << g_pin) | (1 << b_pin));
+    io_ex_write(0x11, current_output_A);
+}
+
+void io_start_breathing(void)
+{
+    // Start pulse by lowering the pin values to 0
+    current_output_A &= ~((1 << r_pin) | (1 << g_pin) | (1 << b_pin));
+    io_ex_write(0x11, current_output_A);
+}
+
+void io_stop_breathing(void)
+{
+    // Prepare for next pulse by raising these pins back to 1
+    current_output_A |= ((1 << r_pin) | (1 << g_pin) | (1 << b_pin));
+    io_ex_write(0x11, current_output_A);
+
+    // Breathing will stop once it finishes it's current breath pattern
 }
