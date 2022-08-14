@@ -40,6 +40,18 @@ void basic_direct_blinky_app(void)
     io_cfg.r_pin = R_IO_PIN;
     io_cfg.g_pin = G_IO_PIN;
     io_cfg.b_pin = B_IO_PIN;
+    led_mode_param_t common_led_params;
+    /*
+     Static mode means TOnX =0
+    */
+    common_led_params.t_on = 0;  // 16 -> 1.0445s on time
+    common_led_params.t_rise = 0; // fade on
+    common_led_params.t_fall = 0; // fade off
+    common_led_params.off_b.t_off = 0; // != 0 -> breathing mode. (31 = 2.024s)
+    common_led_params.off_b.i_off = 0; // Doesn't necessarily have to be all the way off to be off...
+    io_cfg.r_params = &common_led_params;
+    io_cfg.g_params = &common_led_params;
+    io_cfg.b_params = &common_led_params;
     ret = init_io(&io_cfg);
     if (ret != DRV_SUCCESS)
     {
