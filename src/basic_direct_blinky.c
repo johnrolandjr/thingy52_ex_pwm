@@ -33,7 +33,7 @@ void basic_direct_blinky_app(void)
         {85, 0, 0},
         {135, 0, 0},
         {200, 0, 0},
-        {255, 0, 0}
+        {50, 50, 50}
     };
 
     io_cfg_t io_cfg;
