@@ -133,32 +133,42 @@ void basic_direct_blinky_app(void)
         Uses the sx1509 io expander library directly. (we will need to be able to do this if we want to write our own code that uses the io expander)
         i.e. we want to be able to control a stepper motor via the io expander.
     */
-   int i = 0;
-   uint8_t r, g, b;
-   uint8_t colors[NUM_COLORS][NUM_LEDS] = {
-	{0, 0, 0},
-	{10, 0, 0},
-	{25, 0, 0},
-	{45, 0, 0},
-	{85, 0, 0},
-	{135, 0, 0},
-	{200, 0, 0},
-	{255, 0, 0}
-   };
+	int ret;
+	int i = 0;
+	uint8_t r, g, b;
+	uint8_t colors[NUM_COLORS][NUM_LEDS] = {
+		{0, 0, 0},
+		{10, 0, 0},
+		{25, 0, 0},
+		{45, 0, 0},
+		{85, 0, 0},
+		{135, 0, 0},
+		{200, 0, 0},
+		{255, 0, 0}
+	};
 
-   init_io();
-
-   while(true){
-	r = colors[i][R_IDX];
-	g = colors[i][G_IDX];
-	b = colors[i][B_IDX];
-	i = i + 1;
-	if (i >= NUM_COLORS)
+	ret = init_io();
+	if (ret != APP_SUCCESS)
 	{
-		i=0;
+		return ret;
 	}
-	set_pwm(r, g, b);
-	k_msleep(SLEEP_TIME_MS);
-   }
+
+	while(true){
+		r = colors[i][R_IDX];
+		g = colors[i][G_IDX];
+		b = colors[i][B_IDX];
+		i = i + 1;
+	
+		set_pwm(r, g, b);
+		k_msleep(SLEEP_TIME_MS);
+
+		if (i >= NUM_COLORS)
+		{
+			i=0;
+
+			// For fun, if we reached the end of our colors, wait a bit before repeating the process
+			k_msleep(500);
+		}
+	}
 }
 #endif // BASIC_DIRECT_BLINKY_APP
