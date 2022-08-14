@@ -28,8 +28,8 @@ int single_shot_blinky_app(void)
        1-15 -> t_on * 64 * 255 / 2000000 = in seconds
        16-31 -> t_on * 512 * 255 / 2000000 = in seconds
     */
-    common_led_params.t_on = 4;  // 16 -> 1.0445s on time
-    common_led_params.t_rise = 0; // not going to do fade but, it's available
+    common_led_params.t_on = 20;  // 20 -> 1.305s on time
+    common_led_params.t_rise = 25; // 25 -> 16 * (20-0) * t_rise * 255 / 2000000 = 1.02s rise
     common_led_params.t_fall = 0; // not going to do fade but, it's available
     common_led_params.off_b.t_off = 0; // 0 -> single shot mode
     common_led_params.off_b.i_off = 0; // Doesn't necessarily have to be all the way off to be off...
@@ -91,9 +91,9 @@ int breathing_blinky_app(void)
     }
 
     // Set the color
-    io_set_intensity(R_IO_PIN, 0);
+    io_set_intensity(R_IO_PIN, 10);
     io_set_intensity(G_IO_PIN, 10);
-    io_set_intensity(B_IO_PIN, 10);
+    io_set_intensity(B_IO_PIN, 0);
 
     io_start_breathing();
 

@@ -9,10 +9,10 @@
 #define APPLICATIONS_H
 
 // Select which application by uncommenting a line
-//#define BASIC_BLINKY_APP
+#define BASIC_BLINKY_APP
 //#define BASIC_DIRECT_BLINKY_APP
 //#define SINGLE_SHOT_BLINKY_APP
-#define BREATHING_BLINKY_APP
+//#define BREATHING_BLINKY_APP
 
 #if defined(BASIC_BLINKY_APP)
     #include "basic_blinky.h"

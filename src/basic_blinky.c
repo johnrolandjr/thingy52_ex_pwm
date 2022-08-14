@@ -25,6 +25,12 @@ int init_rgb_leds(void)
     if (!device_is_ready(red_led.port)) {
         return APP_ERROR;
     }
+    if (!device_is_ready(green_led.port)) {
+        return APP_ERROR;
+    }
+    if (!device_is_ready(blue_led.port)) {
+        return APP_ERROR;
+    }
 
     ret = gpio_pin_configure_dt(&red_led, GPIO_OUTPUT_ACTIVE);
     if (ret < 0) {
