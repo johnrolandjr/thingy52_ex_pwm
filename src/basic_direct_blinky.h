@@ -12,9 +12,6 @@
 
 // Macros and String Literals
 
-/* The devicetree node identifier for the io expander that is available on the i2c0 bus. */
-#define I2C_IO DT_NODELABEL(sx1509b)
-
 #define SLEEP_TIME_MS   50
 
 #define NUM_COLORS	8
@@ -28,9 +25,6 @@
 #define APP_ERROR 	    (-1)
 
 // Function Prototypes
-void io_ex_write(uint8_t regAddr, uint8_t regValue);
-int init_io(void);
-int set_pwm(uint8_t r, uint8_t g, uint8_t b);
 void basic_direct_blinky_app(void);
 
 #endif // BASIC_DIRECT_BLINKY_H
