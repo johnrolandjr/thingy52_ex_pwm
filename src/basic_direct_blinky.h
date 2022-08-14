@@ -11,6 +11,10 @@
 #include <stdint.h>
 
 // Macros and String Literals
+
+/* The devicetree node identifier for the io expander that is available on the i2c0 bus. */
+#define I2C_IO DT_NODELABEL(sx1509b)
+
 #define SLEEP_TIME_MS   50
 
 #define NUM_COLORS	8
